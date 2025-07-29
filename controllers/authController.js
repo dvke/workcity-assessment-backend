@@ -3,10 +3,16 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
 // Generate JWT Token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+const generateToken = (id, name, role) => {
+  return jwt.sign(
+    {
+      id,
+      name,
+      role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
+  );
 };
 
 // @desc    Register a new user
@@ -32,7 +38,7 @@ exports.signup = async (req, res) => {
     // Create user
     user = await User.create({ name, email, password, role });
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.name, user.role);
 
     res.status(201).json({ success: true, token });
   } catch (error) {
@@ -70,7 +76,7 @@ exports.login = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.name, user.role);
 
     res.status(200).json({ success: true, token });
   } catch (error) {
