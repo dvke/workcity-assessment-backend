@@ -16,7 +16,7 @@ app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Body parser for JSON format
 
 // // Define API Routes
-// app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
 // app.use("/api/clients", require("./routes/clientRoutes"));
 // app.use("/api/projects", require("./routes/projectRoutes"));
 
